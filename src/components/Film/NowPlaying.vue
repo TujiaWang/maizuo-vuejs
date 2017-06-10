@@ -18,12 +18,15 @@
     export default{
         data(){
             return {
-                nowplaying : []
+                nowplaying : [],
+                page : 1,
+                count : 5
             }
         },
         created(){
             var _this = this;
-            axios.get('http://localhost:3000/proxy?url=http://m.maizuo.com/v4/api/film/now-playing?__t=1489757848979&page=1&count=5')
+            let url = 'http://localhost:3000/proxy?url=http://m.maizuo.com/v4/api/film/now-playing?__t=1489757848979&page='+this.page+'&count='+this.count;
+            axios.get(url)
                     .then(function(response){
                         // 成功时执行的方法，response返回的数据
                         // console.log(JSON.parse(response.data).data.films);
@@ -31,6 +34,26 @@
                     }).catch(function(error){
                         console.log(error);
                     });
+        },
+        mounted(){
+            var _this = this;
+            window.addEventListener('scroll',function(){
+                if(document.body.scrollTop + window.innerHeight >= document.body.offsetHeight) {
+                    _this.page++;
+                    let url = 'http://localhost:3000/proxy?url=http://m.maizuo.com/v4/api/film/now-playing?__t=1489757848979&page='+_this.page+'&count='+_this.count;
+                    axios.get(url)
+                            .then(function(response){
+                                // 成功时执行的方法，response返回的数据
+                                // console.log(JSON.parse(response.data).data.films);
+                                let tmp = JSON.parse(response.data).data.films;
+                                tmp.map(function(item,index){
+                                    _this.nowplaying.push(item);
+                                });
+                            }).catch(function(error){
+                                console.log(error);
+                            });
+                }
+            });
         }
     }
 </script>
@@ -50,7 +73,12 @@
 		line-height: 28px;
 		position: relative;
 		flex-grow:1;
-
+        h2{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width:75%;
+        }
 		.score {
 			position: absolute;
 			right: 10px;
