@@ -20,3 +20,5 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 ```
+## 部分截图如下
+![](1.png) ![](2.png) ![](3.png) ![](4.png)
